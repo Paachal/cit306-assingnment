@@ -4,7 +4,7 @@ from googleapiclient.discovery import build
 from pymongo import MongoClient
 
 # MongoDB Atlas setup
-MONGO_URI = "mongodb+srv://<username>:<password>@cluster0.mongodb.net/formdb?retryWrites=true&w=majority"
+MONGO_URI = "mongodb+srv://paschal:.adgjmptwpaschal@cluster0.dx4v8.mongodb.net/formDB?retryWrites=true&w=majority&appName=Cluster0"
 client = MongoClient(MONGO_URI)
 db = client["formdb"]
 collection = db["formdata"]

@@ -1,33 +1,25 @@
-from fastapi import FastAPI, Form
+from fastapi import FastAPI, Request, Form
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pymongo import MongoClient
-from pydantic import BaseModel
-import uvicorn
+from starlette.responses import RedirectResponse
+from starlette.templating import Jinja2Templates
 
 app = FastAPI()
 
-# MongoDB Atlas connection string
-MONGO_URI = "mongodb+srv://paschal:.adgjmptwpaschal@cluster0.dx4v8.mongodb.net/formDB?retryWrites=true&w=majority&appName=Cluster0"
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
+templates = Jinja2Templates(directory="app/templates")
+
+# MongoDB Atlas setup
+MONGO_URI = "mongodb+srv://paschal:.adgjmptwpaschal@cluster0.dx4v8.mongodb.net/formDB?retryWrites=true&w=majority&appName=Cluster0"
 client = MongoClient(MONGO_URI)
 db = client["formdb"]
 collection = db["formdata"]
 
-class FormData(BaseModel):
-    name: str
-    email: str
-    phone: str
-    age: int
-    address: str
-    city: str
-    state: str
-    country: str
-    zip: str
-    comments: str
-
 @app.get("/", response_class=HTMLResponse)
-async def read_form():
-    with open("index.html", "r") as file:
-        return HTMLResponse(content=file.read(), status_code=200)
+async def get_form(request: Request):
+    return templates.TemplateResponse("form.html", {"request": request})
 
 @app.post("/submit")
 async def submit_form(
@@ -55,7 +47,4 @@ async def submit_form(
         "comments": comments
     }
     collection.insert_one(form_data)
-    return {"message": "Form submitted successfully"}
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    return RedirectResponse(url="/", status_code=303)
