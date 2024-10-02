@@ -11,7 +11,7 @@ collection = db["formdata"]
 
 # Google Sheets API setup
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-SERVICE_ACCOUNT_FILE = 'path/to/your/service-account-file.json'
+SERVICE_ACCOUNT_FILE = 'data_transfer/service-account-file.json'
 
 creds = service_account.Credentials.from_service_account_file(
         SERVICE_ACCOUNT_FILE, scopes=SCOPES)
